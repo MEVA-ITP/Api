@@ -1,0 +1,32 @@
+<!-- index.html -->
+<html>
+<head>
+    <!-- Do _not_  rely on this URL in production. Use only during development.  -->
+    <!--<script src="//netflix.github.io/falcor/build/falcor.browser.js"></script>-->
+    <script src="js/falcor.browser.min.js"></script>
+    <script>
+        let model = new falcor.Model({source: new falcor.HttpDataSource('/model.json') });
+
+        // retrieve the "greeting" key from the root of the Virtual JSON resource
+        function getGreeting() {
+            model.get("status").then(function (response) {
+                document.getElementById('output').innerText = response.json.status
+                //document.write(response.json.greeting);
+            });
+        }
+
+        async function getUser() {
+            let response = await model.get("user")
+            document.getElementById('user').innerText = response.json.user
+        }
+    </script>
+</head>
+<body>
+<h1>Test</h1>
+<button onclick="getGreeting()">Get Status</button>
+<button onclick="getUser()">Get User</button>
+<a href="login">Login</a>
+<h3 id="output"></h3>
+<h3 id="user"></h3>
+</body>
+</html>

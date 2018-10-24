@@ -1,0 +1,28 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "Backend for the Project [MEVA](https://github.com/MEVA-ITP)",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MEVA-ITP/Api.git"
+  },
+  "author": "Meva Project Team Backend",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MEVA-ITP/Api/issues"
+  },
+  "homepage": "https://github.com/MEVA-ITP/Api#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "falcor-express": "^0.1.4",
+    "falcor-router": "^0.8.3",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
+  }
+}
