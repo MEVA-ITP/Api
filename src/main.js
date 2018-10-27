@@ -1,12 +1,11 @@
-let express = require('express')
-let path = require('path')
-let falcorExpress = require('falcor-express')
-let Router = require('falcor-router')
-let passport = require('passport')
-let LocalStrategy = require('passport-local').Strategy
-let session = require('express-session')
-let bodyParser = require('body-parser')
-let MEVARouter = require('./src/router')
+import "babel-polyfill"
+import express from "express"
+import falcorExpress from "falcor-express"
+import passport from "passport"
+import {Strategy as LocalStrategy} from "passport-local"
+import session from 'express-session'
+import bodyParser from 'body-parser'
+import MEVARouter from './general/router'
 
 passport.use(new LocalStrategy((username, password, done) => {
     if (username === password) {
