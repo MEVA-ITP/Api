@@ -5,7 +5,7 @@ import passport from "passport"
 import {Strategy as LocalStrategy} from "passport-local"
 import session from 'express-session'
 import bodyParser from 'body-parser'
-import MEVARouter from './general/router'
+import {MEVARouter} from './general/router'
 
 passport.use(new LocalStrategy((username, password, done) => {
     if (username === password) {
@@ -41,6 +41,7 @@ app.use('/model.json',
         return new MEVARouter(req.user)
     }))
 
-app.use('/', express.static(__dirname + '/public'))
+app.use('/', express.static(__dirname + '/../public'))
+console.log(__dirname)
 
 app.listen(3000, () => console.log('Server started'))

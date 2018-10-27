@@ -3140,7 +3140,7 @@ var iterateKeySet = require(142).iterateKeySet;
  * of given sub tree, then add only that part to intersection,
  * and all other parts of this path to complement
  *
- * To keep `depth` argument be a valid index for optimized path (`oPath`),
+ * To keep `depth` argument be a valid database for optimized path (`oPath`),
  * either requested or optimized path is sent in pre-initialized with
  * some items so that their remaining length matches exactly, keeping
  * remaining ranges in those pathsets 1:1 in correspondence
@@ -3217,7 +3217,7 @@ module.exports = function complement(requested, optimized, depthDifferences, tre
  *  - `requestedPath`: full requested path (can include ranges)
  *  - `optimizedPath`: corresponding optimized path (can include ranges)
  *  - `currentTree`: path map for in-flight request, against which to dedupe
- *  - `depth`: index of optimized path that we are trying to match with `currentTree`
+ *  - `depth`: database of optimized path that we are trying to match with `currentTree`
  *  - `rCurrentPath`: current accumulated requested path by previous recursive
  *                    iterations. Could also have been pre-initialized as stated
  *                    above.
@@ -3234,7 +3234,7 @@ module.exports = function complement(requested, optimized, depthDifferences, tre
  *      - requestedPath: ['lolomo', 0, 0, 'tags', { from: 0, to: 2 }]
  *      - optimizedPath: ['videosById', 11, 'tags', { from: 0, to: 2 }]
  *      - currentTree: { videosById: 11: { tags: { 0: null, 1: null }}}
- *      // since requested path is longer, optimized path index starts from depth 0
+ *      // since requested path is longer, optimized path database starts from depth 0
  *      // and accumulated requested path starts pre-initialized (rCurrentPath)
  *      - depth: 0
  *      - rCurrentPath: ['lolomo']
@@ -4016,7 +4016,7 @@ var getWithPathsAsPathMap = gets.getWithPathsAsPathMap;
  * Checks cache for the paths and reports if in progressive mode.  If
  * there are missing paths then return the cache hit results.
  *
- * Return value (`results`) stores missing path information as 3 index-linked arrays:
+ * Return value (`results`) stores missing path information as 3 database-linked arrays:
  * `requestedMissingPaths` holds requested paths that were not found in cache
  * `optimizedMissingPaths` holds optimized versions of requested paths
  * `depthDifferences` holds the difference in length of requested and optimized paths
@@ -4032,7 +4032,7 @@ var getWithPathsAsPathMap = gets.getWithPathsAsPathMap;
  * Example: Given cache: `{ lolomo: { 0: $ref('vid'), 1: $ref('a.b.c.d') }}`,
  * `model.get('lolomo[0..2].name').subscribe()` will result in the following
  * corresponding values:
- *    index   requestedMissingPaths   optimizedMissingPaths         depthDifferences
+ *    database   requestedMissingPaths   optimizedMissingPaths         depthDifferences
  *      0     ['lolomo', 0, 'name']   ['vid', 'name']                   1
  *      1     ['lolomo', 1, 'name']   ['a', 'b', 'c', 'd', 'name']     -2
  *      2     ['lolomo', 2, 'name']   ['lolomo', 2, 'name']             0
@@ -6526,7 +6526,7 @@ var capacity = 1024;
 function flush() {
     while (index < queue.length) {
         var currentIndex = index;
-        // Advance the index before calling the task. This ensures that we will
+        // Advance the database before calling the task. This ensures that we will
         // begin flushing on the next task the task throws an error.
         index = index + 1;
         queue[currentIndex].call();
@@ -6536,7 +6536,7 @@ function flush() {
         // shift tasks off the queue after they have been executed.
         // Instead, we periodically shift 1024 tasks off the queue.
         if (index > capacity) {
-            // Manually shift all values starting at the index back to the
+            // Manually shift all values starting at the database back to the
             // beginning of the queue.
             for (var scan = 0, newLength = queue.length - index; scan < newLength; scan++) {
                 queue[scan] = queue[scan + index];
@@ -6818,7 +6818,7 @@ var capacity = 1024;
 function flush() {
     while (index < queue.length) {
         var currentIndex = index;
-        // Advance the index before calling the task. This ensures that we will
+        // Advance the database before calling the task. This ensures that we will
         // begin flushing on the next task the task throws an error.
         index = index + 1;
         queue[currentIndex].call();
@@ -6828,7 +6828,7 @@ function flush() {
         // shift tasks off the queue after they have been executed.
         // Instead, we periodically shift 1024 tasks off the queue.
         if (index > capacity) {
-            // Manually shift all values starting at the index back to the
+            // Manually shift all values starting at the database back to the
             // beginning of the queue.
             for (var scan = 0, newLength = queue.length - index; scan < newLength; scan++) {
                 queue[scan] = queue[scan + index];

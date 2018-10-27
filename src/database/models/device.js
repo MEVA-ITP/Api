@@ -1,8 +1,8 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose"
 
 const root = "/public/images/"
 
-const deviceSchema = new mongoose.Schema({
+export const deviceSchema = new mongoose.Schema({
     name: {type: String, required: true},
     serial: {type: String, required: true},
     image: {
@@ -14,5 +14,3 @@ const deviceSchema = new mongoose.Schema({
     attributes: {type: Map, required: true},
     tags: [String]
 })
-
-module.exports = deviceSchema

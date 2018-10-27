@@ -1,12 +1,12 @@
-const mongoose = require("mongoose")
-const validator = require("validator")
-const phone = require("phone")
+import mongoose from "mongoose"
+import validator from "validator"
+import phone from "phone"
 
 // Using validator for email, and other validation
 // Not using validator for phone, because Austrian phone number are not recognized
 // Using phone for that purpose. plus for phone, also gives us normalized phone numbers. For sms or something
 
-const userSchema = new mongoose.Schema({
+export const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
@@ -33,5 +33,3 @@ const userSchema = new mongoose.Schema({
     lname: String, // Only required if external
     password: String, // Only required if external
 })
-
-module.exports = userSchema

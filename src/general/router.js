@@ -1,6 +1,7 @@
-let Router = require('falcor-router')
+import Router from 'falcor-router'
+import {database, models} from "../database/database";
 
-class MEVARouter extends
+class _MEVARouter extends
 
     Router.createClass([
         {
@@ -11,10 +12,12 @@ class MEVARouter extends
         },
         {
             route: 'user',
-            get: function (pathSet) {
+            get: async function (pathSet) {
                 if(!this.userMail) {
                     throw new Error('not authorized')
                 }
+                let find = await database.models.User.find({email: this.userMail})
+                console.log(find)
                 return {path: ['user'], value: this.userMail}
             }
         }
@@ -27,4 +30,4 @@ class MEVARouter extends
 
 }
 
-module.exports = MEVARouter
+export const MEVARouter = _MEVARouter

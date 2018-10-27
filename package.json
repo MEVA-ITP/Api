@@ -28,7 +28,9 @@
     "firebase-admin": "^6.1.0",
     "mongoose": "^5.3.6",
     "passport": "^0.4.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "phone": "^2.2.0",
+    "validator": "^10.8.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
