@@ -6,7 +6,7 @@ let passport = require('passport')
 let LocalStrategy = require('passport-local').Strategy
 let session = require('express-session')
 let bodyParser = require('body-parser')
-let MEVARouter = require('./router')
+let MEVARouter = require('./src/router')
 
 passport.use(new LocalStrategy((username, password, done) => {
     if (username === password) {
@@ -26,7 +26,6 @@ passport.deserializeUser((id, done) => {
 
 let app = express()
 
-app.use('/', express.static(__dirname + '/public'))
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
@@ -41,22 +40,8 @@ app.post('/login', passport.authenticate('local', {successRedirect: '/', failure
 app.use('/model.json',
     falcorExpress.dataSourceRoute((req, res) => {
         return new MEVARouter(req.user)
-
-        /*return new Router([
-            {
-                route: 'user',
-                get: () => {
-                    return {path: ['user'], value: req.user}
-                }
-            },
-            {
-                route: 'status',
-                get: () => {
-                    return {path: ['status'], value: 'OK'}
-                }
-            }
-        ])*/
-
     }))
+
+app.use('/', express.static(__dirname + '/public'))
 
 app.listen(3000, () => console.log('Server started'))
