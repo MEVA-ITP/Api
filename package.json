@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "babel --presets es2015 -d run/ src/ --quiet",
     "prestart": "npm run compile",
-    "start": "node run/main.js",
-    "development": "nodemon --exec npm start --watch src"
+    "start": "cd run && node main.js",
+    "dev": "nodemon --exec npm start --watch src"
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,8 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "phone": "^2.2.0",
+    "session-file-store": "^1.2.0",
+    "uuid": "^3.3.2",
     "validator": "^10.8.0"
   },
   "devDependencies": {
