@@ -1,4 +1,3 @@
-import {pw} from '../pw'
 import passport from 'passport'
 import {models} from "../database/index";
 import {AuthStrategy} from "../general/AuthStrategy";
