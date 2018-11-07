@@ -3,16 +3,12 @@ import passport from 'passport'
 import {models} from "../database/index";
 import {AuthStrategy} from "../general/AuthStrategy";
 
-const getUserByMail = async (email) => {
-    return models.User.find({email})
-}
-
 const getUserById = async (id) => {
     return models.User.findById(id)
 }
 
 export const init = (app) => {
-    passport.use(AuthStrategy)
+    passport.use('auth', AuthStrategy)
 
     passport.serializeUser((user, done) => {
         done(null, user.id)
@@ -20,7 +16,7 @@ export const init = (app) => {
 
     passport.deserializeUser(async (id, done) => {
         let user = await getUserById(id)
-        if(!user) {
+        if (!user) {
             return done(null, false, {message: "Id not known"})
         }
 
