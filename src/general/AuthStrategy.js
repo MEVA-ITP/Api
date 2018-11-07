@@ -3,10 +3,7 @@ import bcrypt from "bcrypt";
 import {authentikateLdapUser} from "./ldap";
 import {models} from "../database";
 
-const getUserByMail = async (email) => {
-    return models.User.find({email})
-}
-
+// Error messages "store" to always use the *same* message on the same error
 export const errorMsgs = {
     invalidCredentials: "Invalid credentials.",
     disabled: "This user is disabled.",
@@ -15,7 +12,9 @@ export const errorMsgs = {
 export const AuthStrategy = new LocalStrategy(
     {usernameField: 'email'},
     async (email, password, done) => {
-        let user = await getUserByMail(email)
+        // Search database for user with this email
+        let user = await models.User.find({email})
+
         // Check if we got exactly one user. if less there was no user with this mail.
         // if more. we have got an error (email = unique)
         if (user.length !== 1) {
@@ -26,6 +25,7 @@ export const AuthStrategy = new LocalStrategy(
         // Get the one user
         user = user[0]
 
+        // Check if the user is active
         if (user.active === false) {
             return done(null, false, {message: errorMsgs.disabled})
         }
