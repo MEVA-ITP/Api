@@ -5,5 +5,10 @@ export const config = {
     paths: {
         public: "../public",
         server: './server'
+    },
+    ldap: {
+        url: 'ldap://tgm.ac.at',
+        user: 'dlangheiter@tgm.ac.at',
+        pw: '',
     }
 }
