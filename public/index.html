@@ -16,8 +16,9 @@
         }
 
         async function getUser() {
-            let response = await model.get("user")
-            document.getElementById('user').innerText = response.json.user
+            let response = await model.get("user['email', 'phone', 'external', 'active']")
+            console.log(response.json.user)
+            document.getElementById('user').innerText = response.json.user.email
         }
     </script>
 </head>

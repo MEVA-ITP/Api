@@ -7,25 +7,37 @@ class _MEVARouter extends
         {
             route: 'status',
             get: function (pathSet) {
-                return {path: ['status'], value: this.userMail ? 'authenticated' : 'unauthenticated'}
+                return {path: ['status'], value: this.user ? 'authenticated' : 'unauthenticated'}
             }
         },
         {
-            route: 'user',
+            route: "user['email', 'phone', 'external', 'active']",
             get: async function (pathSet) {
-                if(!this.userMail) {
+                let keys = pathSet[1]
+                if(!this.user) {
                     throw new Error('not authorized')
                 }
-                let find = await database.models.User.find({email: this.userMail})
-                console.log(find)
-                return {path: ['user'], value: this.userMail}
+
+                return keys.map(key => ({path: ['user', key], value: this.user[key]}))
+            }
+        },
+        {
+            route: "userById[{keys:ids}]['email', 'phone', 'external', 'active', 'message_tokens', 'password']",
+            get: function *(pathSet) {
+                if(!this.isLocalhost) {
+                    throw new Error("not authorized")
+                }
+
+
+
             }
         }
     ]) {
 
-    constructor(userMail) {
+    constructor(user, isLocalhost) {
         super();
-        this.userMail = userMail
+        this.user = user
+        this.isLocalhost = isLocalhost
     }
 
 }

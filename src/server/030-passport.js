@@ -8,15 +8,10 @@ const getUserByMail = async (email) => {
 }
 
 const getUserById = async (id) => {
-    return models.User.find({id})
+    return models.User.findById(id)
 }
 
 export const init = (app) => {
-    bcrypt.hash('david', 10, function(err, hash) {
-        console.log("HASH", hash)
-    });
-    console.log("INIT PASSPORT")
-
     passport.use(new LocalStrategy(
         {usernameField: 'email'},
         async (email, password, done) => {
@@ -32,6 +27,7 @@ export const init = (app) => {
             user = user[0]
             // Check if external and check password
             if(user.external === true && await bcrypt.compare(password, user.password)) {
+                console.log(`AUTHED user ${user}`)
                 done(null, user)
                 return
             }
@@ -45,11 +41,11 @@ export const init = (app) => {
 
     passport.deserializeUser(async (id, done) => {
         let user = await getUserById(id)
-        if(user.length !== 1) {
+        if(!user) {
             return done(null, false, {message: "Id not known"})
         }
 
-        done(null, user[0]);
+        done(null, user);
     })
 
     app.use(passport.initialize())

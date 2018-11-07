@@ -4,8 +4,6 @@ import sessionFileStore from 'session-file-store'
 const FileStore = sessionFileStore(session)
 
 export const init = (app) => {
-    console.log("INIT SESSION")
-
     app.use(session({
         genid: (req) => {
             return uuid()
