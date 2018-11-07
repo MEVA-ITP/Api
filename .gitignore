@@ -2,3 +2,4 @@
 node_modules/
 run/
 package-lock.json
+src/pw.js

@@ -1,3 +1,6 @@
+import ldapjs from 'ldapjs'
+import {pw} from '../pw'
+import {search, bind} from "../general/ldapsearchpromise";
 import passport from 'passport'
 import {Strategy as LocalStrategy} from 'passport-local'
 import {models} from "../database/index";
@@ -30,6 +33,23 @@ export const init = (app) => {
                 console.log(`AUTHED user ${user}`)
                 done(null, user)
                 return
+            }
+            if(user.external === false){
+                let client = ldapjs.createClient({
+                    url: 'ldap://tgm.ac.at'
+                })
+                await bind(client, 'mfletzberger@tgm.ac.at', pw)
+                let opts = {
+                    filter: `(mail=${email})`,
+                    scope: 'sub'
+                }
+                let res = await search(client, opts)
+                try {
+                    await bind(client, res.object.dn, password)
+                    return done(null, user)
+                } catch(e) {
+                    console.log("No auth user")
+                }
             }
 
             done(null, false, 'invalid credentials\n')
