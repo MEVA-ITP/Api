@@ -18,4 +18,7 @@ fs.readdirSync(path.join(__dirname, config.paths.server)).sort().forEach(file =>
     }
 })
 
+// Server public directory
+app.use('/', express.static(path.join(__dirname, config.paths.public)))
+
 app.listen(3000, () => console.log('Server started on port 3000'))

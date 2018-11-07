@@ -5,9 +5,9 @@ export const config = {
     },
     // Path configuration.
     paths: {
-        // Where the public directory lies (aka public webpage)
+        // Where the public directory lies (aka public webpage). Relative path to main.js
         public: "../public",
-        // Where the 'extension' of the server lies
+        // Where the 'extension' of the server lies. Relative path to main.js
         server: './server'
     },
     ldap: {
