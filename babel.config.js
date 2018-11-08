@@ -9,5 +9,5 @@ const presets = [
         }
     ]
 ]
-git
+
 module.exports = {presets}
