@@ -1,1 +1,1 @@
-export * from './database'
+export {database, models} from './database'
