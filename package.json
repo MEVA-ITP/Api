@@ -5,7 +5,8 @@
   "main": "src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "babel src/ -d run/ --quiet",
+    "Xcompile": "rmdir run /s /q && babel src/ -d run/ --quiet",
+    "compile": "if exist run del /q run && babel src/ -d run/ --quiet",
     "prestart": "npm run compile",
     "start": "cd run && node main.js",
     "dev": "nodemon --exec npm start --watch src"
@@ -27,6 +28,7 @@
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "falcor-express": "^0.1.4",
+    "falcor-json-graph": "^2.2.2",
     "falcor-router": "^0.8.3",
     "firebase-admin": "^6.1.0",
     "ldapjs": "^1.0.2",

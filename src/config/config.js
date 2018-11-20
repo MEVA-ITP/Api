@@ -1,3 +1,5 @@
+import {ldapPw} from "./passwords";
+
 export const config = {
     // Mongo db database configuration
     db: {
@@ -14,6 +16,9 @@ export const config = {
         // Object directly passed to ldapjs.createClient()
         client: {
             url: 'ldap://tgm.ac.at',
-        }
+        },
+        base: 'OU=People,OU=identity,DC=tgm,DC=ac,DC=at',
+        user: 'dlangheiter@tgm.ac.at',
+        password: ldapPw,
     }
 }

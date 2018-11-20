@@ -1,10 +1,16 @@
 import Router from 'falcor-router'
+import jsonGraph from 'falcor-json-graph'
 import {userPermissionBigerThan} from "./helpers";
 import {models} from "../database";
 import {userPermissions as UP} from "../database/models/user";
 
+const $ref = jsonGraph.ref
+const $error = jsonGraph.error
+
+
 const errorStore = {
     notAuthed: () => new Error("not authorized"),
+    notFound: () => new Error("not found"),
 }
 
 class _MEVARouter extends Router.createClass([
@@ -17,14 +23,20 @@ class _MEVARouter extends Router.createClass([
     },
     {
         route: "user['email', 'phone', 'external', 'active', 'permission']",
-        get: async function (pathSet) {
+        get: async function () {
             console.log('CALL user')
-            let keys = pathSet[1]
-            if (userPermissionBigerThan(this.user, UP.user)) {
-                throw errorStore.notAuthed()
-            }
 
-            return keys.map(key => ({path: ['user', key], value: this.user[key]}))
+            let ret = [{
+                path: ['user'],
+                //value: $ref(['usersById', this.user._id.toString()])
+                value: $ref(`usersById[${this.user._id.toString()}]`)
+            }]
+
+            console.log(JSON.stringify(ret))
+            console.log("TEST")
+
+            return ret
+            //return keys.map(key => ({path: ['user', key], value: this.user[key]}))
         }
     },
     {
@@ -32,7 +44,7 @@ class _MEVARouter extends Router.createClass([
         get: async function (pathSet) {
             console.log("CALL usersById")
             const userKeys = pathSet[2]
-            if(userPermissionBigerThan(this.user, UP.admin)) {
+            if (userPermissionBigerThan(this.user, UP.admin)) {
                 let projection = {}
                 userKeys.forEach((name) => {
                     projection[name] = true
@@ -52,6 +64,40 @@ class _MEVARouter extends Router.createClass([
                     userKeys.forEach(key => responseUser[key] = user[key])
                     usersById[user._id] = responseUser
                 })
+                return response
+            } else if (userPermissionBigerThan(this.user, UP.user)) {
+                let response = {}
+                let jsonGraphResponse = response['jsonGraph'] = {}
+                let usersById = jsonGraphResponse['usersById'] = {}
+
+                let projection = {}
+                userKeys.forEach((name) => {
+                    projection[name] = true
+                })
+
+                let getUsers = pathSet.ids.filter(id => {
+                    if (!this.user._id.equals(id)) {
+                        usersById[id] = $error(errorStore.notAuthed())
+                    }
+                    return this.user._id.equals(id)
+                })
+
+                if (getUsers.length !== 1) {
+                    return response
+                }
+
+                getUser = getUsers[0]
+
+                let query = {_id: getUser}
+
+                let users = await models.User.find(query, projection)
+
+                if (users.length !== 1) {
+                    usersById[getUser] = $error(errorStore.notFound())
+                } else {
+                    usersById[getUser] = users
+                }
+
                 return response
             }
 

@@ -1,7 +1,7 @@
 import {Strategy as LocalStrategy} from 'passport-local'
 import bcrypt from "bcrypt";
 import {authentikateLdapUser} from "./ldap";
-import {models} from "../database";
+import {User} from "../database";
 
 // Error messages "store" to always use the *same* message on the same error
 export const errorMsgs = {
@@ -13,7 +13,7 @@ export const AuthStrategy = new LocalStrategy(
     {usernameField: 'email'},
     async (email, password, done) => {
         // Search database for user with this email
-        let user = await models.User.find({email})
+        let user = await User.find({email})
 
         // Check if we got exactly one user. if less there was no user with this mail.
         // if more. we have got an error (email = unique)

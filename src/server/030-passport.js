@@ -1,5 +1,5 @@
 import passport from 'passport'
-import {models} from "../database/index";
+import {User} from "../database";
 import {AuthStrategy} from "../general/AuthStrategy";
 
 export const init = (app) => {
@@ -12,7 +12,7 @@ export const init = (app) => {
 
     passport.deserializeUser(async (id, done) => {
         // Load user from database by id
-        let user = await models.User.findById(id)
+        let user = await User.findById(id)
         // If user not found => error
         if (!user) {
             return done(null, false, {message: "Id not known"})

@@ -1,5 +1,5 @@
 import express from "express"
-import {config} from "./config";
+import {config} from "./config/config";
 import path from 'path'
 import fs from 'fs'
 
@@ -20,4 +20,4 @@ fs.readdirSync(path.join(__dirname, config.paths.server)).sort().forEach(file =>
 // Server public directory
 app.use('/', express.static(path.join(__dirname, config.paths.public)))
 
-app.listen(3000, () => console.log('Server started on port 3000'))
+app.listen(3000, () => console.log('Server started on port 3000: http://localhost:3000/'))

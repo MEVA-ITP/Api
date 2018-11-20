@@ -1,19 +1,11 @@
 import mongoose from "mongoose"
 import validator from "validator"
 import phone from "phone"
+import {userPermissions} from "../../config/userPermissions";
 
 // Using validator for email, and other validation
 // Not using validator for phone, because Austrian phone number are not recognized
 // Using phone for that purpose. plus for phone, also gives us normalized phone numbers. For sms or something
-
-export const userPermissions = {
-    "none": 0,
-    "user": 100,
-    "teacher": 200,
-    "admin": 300,
-    "owner": 400,
-    "herobrine": 999,
-}
 
 export const userSchema = new mongoose.Schema({
     email: {
