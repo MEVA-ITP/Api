@@ -30,7 +30,7 @@ export const userSchema = new mongoose.Schema({
     message_tokens: {type: [String], required: true},
     external: {type: Boolean, required: true},
     active: {type: Boolean, required: true}, // externale == false => auto on
-    permission: {type: Object.keys(userPermissions), default: "user", required: true},
+    permission: {type: String, enum: Object.keys(userPermissions), default: "user", required: true},
     fname: String, // Only required if external
     lname: String, // Only required if external
     password: String, // Only required if external

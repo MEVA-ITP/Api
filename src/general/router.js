@@ -1,12 +1,10 @@
 import Router from 'falcor-router'
 import jsonGraph from 'falcor-json-graph'
-import {userPermissionBigerThan} from "./helpers";
-import {models} from "../database";
-import {userPermissions as UP} from "../database/models/user";
+import {userPermissionBigerThan, USER, ADMIN} from "../config/userPermissions";
+import {User} from "../database";
 
 const $ref = jsonGraph.ref
 const $error = jsonGraph.error
-
 
 const errorStore = {
     notAuthed: () => new Error("not authorized"),
@@ -44,7 +42,7 @@ class _MEVARouter extends Router.createClass([
         get: async function (pathSet) {
             console.log("CALL usersById")
             const userKeys = pathSet[2]
-            if (userPermissionBigerThan(this.user, UP.admin)) {
+            if (userPermissionBigerThan(this.user, ADMIN)) {
                 let projection = {}
                 userKeys.forEach((name) => {
                     projection[name] = true
@@ -52,7 +50,7 @@ class _MEVARouter extends Router.createClass([
 
                 let query = {_id: {$in: pathSet.ids}}
 
-                let users = await models.User.find(query, projection)
+                let users = await User.find(query, projection)
 
                 let response = {}
                 let jsonGraphResponse = response['jsonGraph'] = {}
@@ -65,7 +63,7 @@ class _MEVARouter extends Router.createClass([
                     usersById[user._id] = responseUser
                 })
                 return response
-            } else if (userPermissionBigerThan(this.user, UP.user)) {
+            } else if (userPermissionBigerThan(this.user, USER)) {
                 let response = {}
                 let jsonGraphResponse = response['jsonGraph'] = {}
                 let usersById = jsonGraphResponse['usersById'] = {}
@@ -90,7 +88,7 @@ class _MEVARouter extends Router.createClass([
 
                 let query = {_id: getUser}
 
-                let users = await models.User.find(query, projection)
+                let users = await User.find(query, projection)
 
                 if (users.length !== 1) {
                     usersById[getUser] = $error(errorStore.notFound())
