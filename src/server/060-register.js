@@ -2,6 +2,7 @@ import validator from "validator"
 import phone from "phone"
 import {User} from '../database'
 import {doesLdapUserExist} from "../general/ldap";
+import {getUserPermissionByLdapType} from "../config/userPermissions";
 
 export const init = (app) => {
     app.post('/register', async (req, res) => {
@@ -34,17 +35,16 @@ export const init = (app) => {
                 return
             }
 
-            console.log(userExists)
-
-            /*let newUser = new User({
+            let newUser = new User({
                 email: req.body.email,
                 phone: req.body.phone,
+                permission: getUserPermissionByLdapType(userExists.employeeType),
                 external: 'false',
                 active: true,
             })
-            await newUser.save()*/
+            await newUser.save()
 
-            ret += "<h1>Try register</h1>"
+            res.redirect('/login')
         } else {
             res.redirect('/register')
         }

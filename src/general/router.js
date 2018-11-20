@@ -21,20 +21,11 @@ class _MEVARouter extends Router.createClass([
     },
     {
         route: "user['email', 'phone', 'external', 'active', 'permission']",
-        get: async function () {
+        get: async function (pathSet) {
             console.log('CALL user')
+            const keys = pathSet[1]
 
-            let ret = [{
-                path: ['user'],
-                //value: $ref(['usersById', this.user._id.toString()])
-                value: $ref(`usersById[${this.user._id.toString()}]`)
-            }]
-
-            console.log(JSON.stringify(ret))
-            console.log("TEST")
-
-            return ret
-            //return keys.map(key => ({path: ['user', key], value: this.user[key]}))
+            return keys.map(key => ({path: ['user', key], value: this.user[key]}))
         }
     },
     {
