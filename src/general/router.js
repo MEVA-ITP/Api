@@ -1,13 +1,11 @@
 import Router from 'falcor-router'
 import jsonGraph from 'falcor-json-graph'
-import {userPermissionBigerThan, USER, ADMIN} from "./config/userPermissions";
-import {User} from "./database";
-import fs from "fs";
-import path from "path";
-import {config} from "./config/config";
+import {ADMIN, USER, userPermissionBigerThan} from "../config/userPermissions";
+import {Device, User} from "../database";
 
 const $ref = jsonGraph.ref
 const $error = jsonGraph.error
+const $atom = jsonGraph.atom
 
 const errorStore = {
     notAuthed: () => new Error("not authorized"),
@@ -94,6 +92,66 @@ class _MEVARouter extends Router.createClass([
             }
 
             throw errorStore.notAuthed()
+        }
+    },
+    {
+        route: "devices[{ranges}]",
+        get: async function (pathSet) {
+            let ret = []
+            for(let range of pathSet[1]) {
+                let got = await Device.find({}, {_id: 1}).skip(range.from).limit((range.to - range.from)+1)
+
+                let i = range.from
+                for(let g of got) {
+                    ret.push({path: ['devices', i], value: $ref(['deviceById', g._id.toString()])})
+                    i++
+                }
+            }
+
+            return ret
+        }
+    },
+    {
+        route: "devices.length",
+        get: async function () {
+            return [{path: ["devices", "length"], value: await Device.estimatedDocumentCount()}]
+        }
+    },
+    {
+        route: "deviceById[{keys:id}]['id', 'name', 'serial', 'invnr', 'room', 'image', 'description', 'status', 'attributes', 'tags']",
+        get: async function (pathSet) {
+            const deviceKeys = pathSet[1]
+            const getAttributes = pathSet[2]
+
+            let response = {}
+            let jsonGraphResponse = response['jsonGraph'] = {}
+            let deviceById = jsonGraphResponse['deviceById'] = {}
+
+            // Load all from database
+            const got = await Device.find({_id: {$in: deviceKeys}}, getAttributes)
+            for(let g of got) {
+                let id = g._id
+                let set = {}
+                deviceById[id] = {}
+
+                // Go through all required attributes
+                getAttributes.forEach((key) => {
+                    // Check if attribute needs to be an atom
+                    if (["attributes", "tags"].includes(key)) {
+                        // Transpose Map to json object
+                        let attr = {}
+                        g[key].forEach((val, key) => {
+                            attr[key] = val
+                        })
+                        return set[key] = $atom(attr)
+                    }
+                    set[key] = g[key]
+                })
+
+                deviceById[id] = set
+            }
+
+            return response;
         }
     }
 ]) {
