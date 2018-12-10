@@ -1,5 +1,5 @@
 .idea/
 node_modules/
-run/
+build/
 package-lock.json
 src/config/passwords.js

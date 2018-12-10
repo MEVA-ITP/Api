@@ -5,10 +5,9 @@
   "main": "src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "rm -rf run && babel src/ -d run/ --quiet",
-    "xcompile": "if exist run del /q run && npx babel src/ -d run/ --quiet",
+    "compile": "rm -rf build && babel src/ -d build/ --quiet",
     "prestart": "npm run compile",
-    "start": "cd run && node main.js",
+    "start": "cd build && node main.js",
     "dev": "nodemon --exec npm start --watch src"
   },
   "repository": {
