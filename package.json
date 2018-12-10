@@ -23,6 +23,7 @@
   "homepage": "https://github.com/MEVA-ITP/Api#readme",
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
+    "argparse": "^1.0.10",
     "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
@@ -30,21 +31,21 @@
     "falcor-express": "^0.1.4",
     "falcor-json-graph": "^2.2.2",
     "falcor-router": "^0.8.3",
-    "firebase-admin": "^6.1.0",
+    "firebase-admin": "^6.3.0",
     "ldapjs": "^1.0.2",
-    "mongoose": "^5.3.6",
+    "mongoose": "^5.3.15",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "phone": "^2.2.0",
+    "phone": "^2.3.0",
     "session-file-store": "^1.2.0",
     "uuid": "^3.3.2",
     "validator": "^10.9.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.1.5",
-    "@babel/core": "^7.1.5",
+    "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.0",
     "@babel/node": "^7.2.0",
-    "@babel/preset-env": "^7.1.5",
-    "nodemon": "^1.18.0"
+    "@babel/preset-env": "^7.2.0",
+    "nodemon": "^1.18.7"
   }
 }
