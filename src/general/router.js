@@ -1,7 +1,10 @@
 import Router from 'falcor-router'
 import jsonGraph from 'falcor-json-graph'
-import {userPermissionBigerThan, USER, ADMIN} from "../config/userPermissions";
-import {User} from "../database";
+import {userPermissionBigerThan, USER, ADMIN} from "./config/userPermissions";
+import {User} from "./database";
+import fs from "fs";
+import path from "path";
+import {config} from "./config/config";
 
 const $ref = jsonGraph.ref
 const $error = jsonGraph.error
