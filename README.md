@@ -24,6 +24,19 @@ Compiles src and runs
 npm start
 ```
 
+#### Creating a user
+Make sure src is compiles
+```
+npm run compile
+```
+Add user
+```
+node build/admin/createUser.js
+```
+For help:
+```
+node build/admin/createUser.js -h
+```
 
 Backend core technologies:
 * [Express](https://expressjs.com/)
