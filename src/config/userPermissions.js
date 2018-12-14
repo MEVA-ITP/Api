@@ -33,10 +33,15 @@ export const getPermissionLevel = (level) => {
 }
 
 export const getPermissionLevelOfUser = (user) => {
+    if(user === undefined || !("permission" in user)) {
+        return userPermissions.none
+    }
     return getPermissionLevel(user.permission)
 }
 
 export const userPermissionBigerThan = (user, level) => {
-    console.log(user.email, getPermissionLevelOfUser(user), level, getPermissionLevel(level))
+    if(process.env.NODE_ENV === "development") {
+        return true
+    }
     return getPermissionLevelOfUser(user) >= getPermissionLevel(level)
 }
