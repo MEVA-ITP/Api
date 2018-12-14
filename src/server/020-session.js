@@ -1,15 +1,21 @@
 import session from 'express-session'
 import uuid from 'uuid/v4'
+import connectMongo from 'connect-mongo'
 import sessionFileStore from 'session-file-store'
+import {config} from "../config/config"
+import {database} from "../database"
 
-const FileStore = sessionFileStore(session)
+const MongoStore = connectMongo(session)
 
 export const init = (app) => {
     app.use(session({
         genid: () => {
             return uuid()
         },
-        store: new FileStore(),
+        store: new MongoStore({
+            ...config.session.store,
+            mongooseConnection: database,
+        }),
         secret: 'keyboard cat',
         resave: false,
         saveUninitialized: true,

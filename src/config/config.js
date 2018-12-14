@@ -10,7 +10,7 @@ export const config = {
         // Where the public directory lies (aka public webpage). Relative path to main.js
         public: "../public",
         // Where the 'extension' of the server lies. Relative path to main.js
-        server: './server'
+        server: './server',
     },
     ldap: {
         // Object directly passed to ldapjs.createClient()
@@ -20,5 +20,12 @@ export const config = {
         base: 'OU=People,OU=identity,DC=tgm,DC=ac,DC=at',
         user: 'dlangheiter@tgm.ac.at',
         password: ldapPw,
+    },
+    session: {
+        store: {
+            collection: 'sessions',
+            // True/False = wanted fallback to memory storage
+            fallbackMemory: process.env.NODE_ENV === "development" && false
+        }
     }
 }
