@@ -1,6 +1,6 @@
 import Router from 'falcor-router'
 import jsonGraph from 'falcor-json-graph'
-import {ADMIN, USER, userPermissionBigerThan} from "../config/userPermissions";
+import {ADMIN, TEACHER, USER, userPermissionBigerThan} from "../config/userPermissions";
 import {Device, User} from "../database";
 
 const $ref = jsonGraph.ref
@@ -21,18 +21,26 @@ class _MEVARouter extends Router.createClass([
         }
     },
     {
-        route: "user['email', 'phone', 'external', 'active', 'permission']",
-        get: async function (pathSet) {
+        route: "user",
+        get: async function () {
             console.log('CALL user')
-            const keys = pathSet[1]
+            if (!userPermissionBigerThan(this.user, USER)) {
+                throw errorStore.notAuthed()
+            }
 
-            return keys.map(key => ({path: ['user', key], value: this.user[key]}))
+            return [{path: ['user'], value: $ref(["userById", this.user._id])}]
         }
     },
     {
-        route: "usersById[{keys:ids}]['email', 'phone', 'external', 'active', 'permission']",
+        route: "user.addToken",
+        call: function () {
+            return {}
+        }
+    },
+    {
+        route: "userById[{keys:ids}]['email', 'phone', 'fname', 'lname', 'external', 'active', 'permission']",
         get: async function (pathSet) {
-            console.log("CALL usersById")
+            console.log("CALL userById")
             const userKeys = pathSet[2]
             if (userPermissionBigerThan(this.user, ADMIN)) {
                 let projection = {}
@@ -46,19 +54,19 @@ class _MEVARouter extends Router.createClass([
 
                 let response = {}
                 let jsonGraphResponse = response['jsonGraph'] = {}
-                let usersById = jsonGraphResponse['usersById'] = {}
+                let userById = jsonGraphResponse['userById'] = {}
 
                 users.forEach(user => {
                     let responseUser = {}
 
                     userKeys.forEach(key => responseUser[key] = user[key])
-                    usersById[user._id] = responseUser
+                    userById[user._id] = responseUser
                 })
                 return response
             } else if (userPermissionBigerThan(this.user, USER)) {
                 let response = {}
                 let jsonGraphResponse = response['jsonGraph'] = {}
-                let usersById = jsonGraphResponse['usersById'] = {}
+                let userById = jsonGraphResponse['userById'] = {}
 
                 let projection = {}
                 userKeys.forEach((name) => {
@@ -67,7 +75,7 @@ class _MEVARouter extends Router.createClass([
 
                 let getUsers = pathSet.ids.filter(id => {
                     if (!this.user._id.equals(id)) {
-                        usersById[id] = $error(errorStore.notAuthed())
+                        userById[id] = $error(errorStore.notAuthed())
                     }
                     return this.user._id.equals(id)
                 })
@@ -79,13 +87,12 @@ class _MEVARouter extends Router.createClass([
                 getUser = getUsers[0]
 
                 let query = {_id: getUser}
-
                 let users = await User.find(query, projection)
 
                 if (users.length !== 1) {
-                    usersById[getUser] = $error(errorStore.notFound())
+                    userById[getUser] = $error(errorStore.notFound())
                 } else {
-                    usersById[getUser] = users
+                    userById[getUser] = users
                 }
 
                 return response
@@ -97,13 +104,16 @@ class _MEVARouter extends Router.createClass([
     {
         route: "devices[{ranges}]",
         get: async function (pathSet) {
+            if (!userPermissionBigerThan(this.user, USER)) {
+                throw errorStore.notAuthed()
+            }
             let ret = []
-            for(let range of pathSet[1]) {
-                let got = await Device.find({}, {_id: 1}).skip(range.from).limit((range.to - range.from)+1)
+            for (let range of pathSet[1]) {
+                let got = await Device.find({}, {_id: 1}).skip(range.from).limit((range.to - range.from) + 1)
 
                 let i = range.from
-                for(let g of got) {
-                    ret.push({path: ['devices', i], value: $ref(['deviceById', g._id.toString()])})
+                for (let g of got) {
+                    ret.push({path: ['devices', i], value: $ref(['devicesById', g._id.toString()])})
                     i++
                 }
             }
@@ -114,25 +124,44 @@ class _MEVARouter extends Router.createClass([
     {
         route: "devices.length",
         get: async function () {
+            if (!userPermissionBigerThan(this.user, USER)) {
+                throw errorStore.notAuthed()
+            }
             return [{path: ["devices", "length"], value: await Device.estimatedDocumentCount()}]
         }
     },
     {
-        route: "deviceById[{keys:id}]['id', 'name', 'serial', 'invnr', 'room', 'image', 'description', 'status', 'attributes', 'tags']",
+        route: "devices.create",
+        call: async function (path, args) {
+            if (!userPermissionBigerThan(this.user, TEACHER)) {
+                throw errorStore.notAuthed()
+            }
+            console.log(args)
+            return [
+                {path: ["devicesById", "xxx"], value: {test: "hallo"}},
+                {path: ["devices", "length"], value: await Device.estimatedDocumentCount()}
+            ]
+        }
+    },
+    {
+        route: "devicesById[{keys:id}]['id', 'name', 'serial', 'invnr', 'room', 'image', 'description', 'status', 'attributes', 'tags']",
         get: async function (pathSet) {
+            if (!userPermissionBigerThan(this.user, USER)) {
+                throw errorStore.notAuthed()
+            }
             const deviceKeys = pathSet[1]
             const getAttributes = pathSet[2]
 
             let response = {}
             let jsonGraphResponse = response['jsonGraph'] = {}
-            let deviceById = jsonGraphResponse['deviceById'] = {}
+            let devicesById = jsonGraphResponse['devicesById'] = {}
 
             // Load all from database
             const got = await Device.find({_id: {$in: deviceKeys}}, getAttributes)
-            for(let g of got) {
+            for (let g of got) {
                 let id = g._id
                 let set = {}
-                deviceById[id] = {}
+                devicesById[id] = {}
 
                 // Go through all required attributes
                 getAttributes.forEach((key) => {
@@ -148,10 +177,18 @@ class _MEVARouter extends Router.createClass([
                     set[key] = g[key]
                 })
 
-                deviceById[id] = set
+                devicesById[id] = set
             }
 
             return response;
+        },
+        set: async function(jsonEnvelope) {
+            console.log(jsonEnvelope)
+            let id = Object.keys(jsonEnvelope.devicesById)[0]
+            return {
+                path: ["devicesById", id, 'name'],
+                value: jsonEnvelope.devicesById[id].name
+            }
         }
     }
 ]) {

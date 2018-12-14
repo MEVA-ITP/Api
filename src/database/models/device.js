@@ -13,6 +13,6 @@ export const deviceSchema = new mongoose.Schema({
     },
     description: {type: String, required: true},
     status: {type: String, enum: ["ok", "broken", "not available"], required: true}, // Other?
-    attributes: {type: Map, required: true},
+    attributes: {type: Map, required: true, default: {}},
     tags: [String]
 })
