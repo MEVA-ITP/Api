@@ -1,7 +1,6 @@
 import session from 'express-session'
 import uuid from 'uuid/v4'
 import connectMongo from 'connect-mongo'
-import sessionFileStore from 'session-file-store'
 import {config} from "../config/config"
 import {database} from "../database"
 
