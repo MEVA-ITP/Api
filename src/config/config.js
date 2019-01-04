@@ -9,6 +9,7 @@ export const config = {
     paths: {
         // Where the public directory lies (aka public webpage). Relative path to main.js
         public: "../public",
+        defaultFile: '../public/index.html',
         // Where the 'extension' of the server lies. Relative path to main.js
         server: './server',
         // Where the routes for the falcor router are stored
