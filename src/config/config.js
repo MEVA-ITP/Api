@@ -11,6 +11,8 @@ export const config = {
         public: "../public",
         // Where the 'extension' of the server lies. Relative path to main.js
         server: './server',
+        // Where the routes for the falcor router are stored
+        routes: './routes'
     },
     ldap: {
         // Object directly passed to ldapjs.createClient()
