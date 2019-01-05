@@ -8,6 +8,7 @@
     "compile": "rm -rf build && npx babel src/ -d build/ --quiet",
     "prestart": "npm run compile",
     "start": "cd build && node main.js",
+    "startNoCompile": "cd build && node main.js",
     "dev": "cross-env NODE_ENV=development nodemon --exec npm start --watch src"
   },
   "repository": {
