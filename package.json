@@ -9,7 +9,7 @@
     "prestart": "npm run compile",
     "start": "cd build && node main.js",
     "startNoCompile": "cd build && node main.js",
-    "dev": "cross-env NODE_ENV=development nodemon --exec npm start --watch src"
+    "dev": "cross-env NODE_ENV=development LOG_LEVEL=silly nodemon --exec npm start --watch src"
   },
   "repository": {
     "type": "git",
@@ -49,6 +49,6 @@
     "@babel/node": "^7.2.0",
     "@babel/preset-env": "^7.2.0",
     "cross-env": "^5.2.0",
-    "nodemon": "^1.18.7"
+    "nodemon": "^1.18.9"
   }
 }

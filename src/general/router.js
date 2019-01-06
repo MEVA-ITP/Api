@@ -2,6 +2,7 @@ import Router from 'falcor-router'
 import fs from "fs";
 import path from "path";
 import {config} from "../config/config";
+import {logger} from "./loger";
 
 export const loadRoutes = () => {
     let ret = []
@@ -14,7 +15,7 @@ export const loadRoutes = () => {
             const {route} = require(path.join('..', config.paths.routes, file))
             // Check if route is defined
             if (route !== undefined && route !== null) {
-                console.log("LOADED ROUTE:", file)
+                logger.info(`LOADED ROUTE: ${file}`)
                 // Add route/s to ret
                 ret = ret.concat(Array.isArray(route) ? route : [route])
             }
