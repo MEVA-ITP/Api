@@ -1,5 +1,5 @@
 import {ArgumentParser} from 'argparse'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import {database, User} from "../database";
 import {userPermissions} from "../config/userPermissions";
 

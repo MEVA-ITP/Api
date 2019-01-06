@@ -1,6 +1,6 @@
 import {Strategy as LocalStrategy} from 'passport-local'
-import bcrypt from "bcrypt";
-import {authentikateLdapUser} from "./ldap";
+import bcrypt from "bcryptjs";
+import {authenticateLdapUser} from "./ldap";
 import {User} from "../database";
 
 // Error messages "store" to always use the *same* message on the same error
@@ -37,7 +37,7 @@ export const AuthStrategy = new LocalStrategy(
 
         // Check if user is internal. Aka not external
         if (user.external === false) {
-            if (await authentikateLdapUser(email, password)) {
+            if (await authenticateLdapUser(email, password)) {
                 return done(null, user)
             }
         }
