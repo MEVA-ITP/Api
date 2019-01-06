@@ -1,7 +1,16 @@
 import ldapjs from 'ldapjs'
 import {config} from "../config/config";
 
-export const authentikateLdapUser = (email, password) => {
+/**
+ * Tries to authenticate ldap user
+ * @param email Email of the user
+ * @param password Password of the user
+ * @return Promise
+ * resolve(true) when successful
+ * resolve(false) when wrong credentials
+ * rejects(err) when a other error happened
+ */
+export const authenticateLdapUser = (email, password) => {
     // Create new Promise to be promise bases.
     return new Promise(((resolve, reject) => {
         // Create new client to connect to ldap
@@ -25,6 +34,14 @@ export const authentikateLdapUser = (email, password) => {
     }))
 }
 
+/**
+ * Check if an user with the email exists in ldap
+ * @param email Email of the user to check
+ * @return Promise
+ * resolve({sn: '', givenName: '', mail: '', employeeType: ''}) if successful
+ * resolve(false) when not found
+ * reject(err) when there happened a error
+ */
 export const doesLdapUserExist = (email) => {
     // Create new Promise to be promise bases.
     return new Promise(((resolve, reject) => {
