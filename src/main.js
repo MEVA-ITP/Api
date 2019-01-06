@@ -11,7 +11,7 @@ let app = express()
 
 // Scan server directory for .js files and require them and call the init method with the express app as argument
 fs.readdirSync(path.join(__dirname, config.paths.server)).sort().forEach(file => {
-    if (file.endsWith(".js")) {
+    if (file.endsWith(".server.js")) {
         console.log("LOAD FILE:", file)
         const {init} = require(path.join(__dirname, config.paths.server, file))
         if (typeof init === 'function') {
