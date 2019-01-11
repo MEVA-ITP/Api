@@ -19,6 +19,7 @@ export const httpLogger = (req, res, next) => {
         req.method,
         req.url,
         res.statusCode,
+        JSON.stringify(req.body),
         new Date() - startAt, 'ms'
     ].join(' '))
 }
