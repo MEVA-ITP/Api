@@ -18,6 +18,7 @@ export const init = (app) => {
                     logger.error(err)
                     return res.send(JSON.stringify({ok: false, error: "Internal error."}))
                 }
+                logger.info(`Successful login.`)
                 return res.send(JSON.stringify({ok: true, error: null}))
             })
         })(req, res, next)
