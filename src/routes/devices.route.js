@@ -2,6 +2,7 @@ import {TEACHER, USER, userPermissionBigerThan} from "../config/userPermissions"
 import {Device} from "../database";
 import {errorStore} from "../general/errorStore";
 import jsonGraph from "falcor-json-graph";
+import {logger} from "../general/loger";
 const $ref = jsonGraph.ref
 const $error = jsonGraph.error
 const $atom = jsonGraph.atom
@@ -89,7 +90,7 @@ export const route = [
             return response;
         },
         set: async function (jsonEnvelope) {
-            console.log(jsonEnvelope)
+            logger.debug(`Set ${jsonEnvelope}`)
             let id = Object.keys(jsonEnvelope.devicesById)[0]
             return {
                 path: ["devicesById", id, 'name'],
