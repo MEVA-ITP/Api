@@ -1,4 +1,4 @@
-import {Strategy as LocalStrategy} from 'passport-local'
+import {Strategy as JsonStrategy } from 'passport-json'
 import bcrypt from "bcryptjs";
 import {authenticateLdapUser} from "./ldap";
 import {User} from "../database";
@@ -9,8 +9,8 @@ export const errorMsgs = {
     disabled: "This user is disabled.",
 }
 
-export const AuthStrategy = new LocalStrategy(
-    {usernameField: 'email'},
+export const AuthStrategy = new JsonStrategy(
+    {usernameProp: 'email'},
     async (email, password, done) => {
         // Search database for user with this email
         let user = await User.find({email})

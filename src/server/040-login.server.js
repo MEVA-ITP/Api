@@ -11,7 +11,7 @@ export const init = (app) => {
             }
             if (!user) {
                 logger.warn(`Unsuccessful login. Info: ${JSON.stringify(info)}`)
-                return res.send(JSON.stringify({ok: false, error: "Wrong credentials."}))
+                return res.send(JSON.stringify({ok: false, error: "Invalid Credential, please check carefully...!"}))
             }
             req.login(user, (err) => {
                 if (err) {
