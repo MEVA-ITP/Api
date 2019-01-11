@@ -4,6 +4,11 @@ export const config = {
     // Mongo db database configuration
     db: {
         uri: 'mongodb://localhost:27017/onquip',
+        // See https://mongoosejs.com/docs/api.html#mongoose_Mongoose-createConnection for details.
+        // Example: adding user + pwd for login
+        options: {
+            useNewUrlParser: true
+        },
     },
     // Path configuration.
     paths: {
