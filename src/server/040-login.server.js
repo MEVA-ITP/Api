@@ -16,6 +16,6 @@ export const init = (app) => {
                 }
                 return res.send(JSON.stringify({ok: true, error: null}))
             })
-        })
+        })(req, res, next)
     })
 }
