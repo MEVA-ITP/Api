@@ -10,6 +10,13 @@ export const config = {
             useNewUrlParser: true
         },
     },
+    server: {
+        port: process.env.PORT || 3000,
+        headers: {
+            "Access-Control-Allow-Origin": ["https://meva.thekingdave.com", "http://localhost:*"],
+            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        },
+    },
     // Path configuration.
     paths: {
         // Where the public directory lies (aka public webpage). Relative path to main.js

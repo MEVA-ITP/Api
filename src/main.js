@@ -7,7 +7,7 @@ import fs from 'fs'
 import send from 'send'
 import {logger} from "./general/loger";
 
-let PORT = process.env.PORT || 3000;
+const PORT = config.server.port
 
 // Create express app
 let app = express()
