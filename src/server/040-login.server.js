@@ -2,6 +2,7 @@ import passport from "passport";
 import {logger} from "../general/loger";
 
 export const init = (app) => {
+
     // Use auth strategy
     app.post('/login', (req, res, next) => {
         passport.authenticate('auth', (err, user, info) => {
@@ -11,7 +12,8 @@ export const init = (app) => {
             }
             if (!user) {
                 logger.warn(`Unsuccessful login. Info: ${JSON.stringify(info)}`)
-                return res.send(JSON.stringify({ok: false, error: "Invalid Credentials. Please try again."}))
+                // return res.send(JSON.stringify({ok: false, error: "Invalid Credentials. Please try again."}))
+                return res.send(JSON.stringify({ok: false, error: info.message}))
             }
             req.login(user, (err) => {
                 if (err) {
