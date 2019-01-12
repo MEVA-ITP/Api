@@ -13,7 +13,7 @@ export const config = {
     server: {
         port: process.env.PORT || 3000,
         headers: {
-            "Access-Control-Allow-Origin": ["https://meva.thekingdave.com", "http://localhost:3000"],
+            "Access-Control-Allow-Origin": '*',
             "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
         },
     },
