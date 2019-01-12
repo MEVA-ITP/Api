@@ -1,4 +1,4 @@
-import {config} from "../config/config";
+import {config} from "../config/defaultConfig";
 
 export const init = (app) => {
     app.use((req, res, next) => {

@@ -7239,7 +7239,7 @@ function request(method, options, context) {
       config.headers['X-Requested-With'] = 'XMLHttpRequest';
     }
 
-    // allow the user to mutate the config open
+    // allow the user to mutate the defaultConfig open
     if (context.onBeforeRequest != null) {
       context.onBeforeRequest(config);
     }

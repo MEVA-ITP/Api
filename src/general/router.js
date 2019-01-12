@@ -1,7 +1,7 @@
 import Router from 'falcor-router'
 import fs from "fs";
 import path from "path";
-import {config} from "../config/config";
+import {config} from "../config/defaultConfig";
 import {logger} from "./loger";
 
 export const loadRoutes = () => {

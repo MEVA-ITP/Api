@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import express from "express"
-import {config} from "./config/config";
+import {config} from "./config/defaultConfig";
 import path from 'path'
 import fs from 'fs'
 import send from 'send'

@@ -1,5 +1,5 @@
 import {ldapPw} from "./passwords";
-import * as deepmerge from 'deepmerge'
+import deepmerge from 'deepmerge'
 import {config as userConfig} from "./config";
 
 const defaultConfig = {

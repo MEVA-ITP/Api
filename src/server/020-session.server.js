@@ -1,7 +1,7 @@
 import session from 'express-session'
 import uuid from 'uuid/v4'
 import connectMongo from 'connect-mongo'
-import {config} from "../config/config"
+import {config} from "../config/defaultConfig"
 import {database} from "../database"
 
 const MongoStore = connectMongo(session)
