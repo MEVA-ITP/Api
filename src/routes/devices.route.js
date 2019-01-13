@@ -1,4 +1,4 @@
-import {TEACHER, USER, userPermissionBigerThan} from "../config/userPermissions";
+import {TEACHER, USER, userPermissionBigerThan} from "../general/userPermissions";
 import {Device} from "../database";
 import {errorStore} from "../general/errorStore";
 import jsonGraph from "falcor-json-graph";

@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import validator from "validator"
 import phone from "phone"
-import {userPermissions} from "../../config/userPermissions";
+import {userPermissions} from "../../general/userPermissions";
 
 // Using validator for email, and other validation
 // Not using validator for phone, because Austrian phone number are not recognized

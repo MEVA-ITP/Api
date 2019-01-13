@@ -1,4 +1,4 @@
 import mongoose from 'mongoose'
-import {config} from '../config/defaultConfig'
+import {config} from '../general/config'
 
-export const database = mongoose.createConnection(config.db.uri, config.db.options)
+export const database = mongoose.createConnection(config.get('db.uri'), config.get('db.options'))

@@ -1,5 +1,5 @@
 import ldapjs from 'ldapjs'
-import {config} from "../config/defaultConfig";
+import {config} from "./config";
 
 /**
  * Tries to authenticate ldap user

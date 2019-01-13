@@ -1,18 +1,18 @@
 import Router from 'falcor-router'
 import fs from "fs";
 import path from "path";
-import {config} from "../config/defaultConfig";
+import {config} from "./config";
 import {logger} from "./loger";
 
 export const loadRoutes = () => {
     let ret = []
 
     // Read all files in routes directory
-    fs.readdirSync(path.join(config.paths.routes)).sort().forEach(file => {
+    fs.readdirSync(path.join(config.get('paths.routes'))).sort().forEach(file => {
         // Check if file name ends with '.route.js'
         if (file.endsWith(".route.js")) {
             // Load route from file
-            const {route} = require(path.join('..', config.paths.routes, file))
+            const {route} = require(path.join('..', config.get('paths.routes'), file))
             // Check if route is defined
             if (route !== undefined && route !== null) {
                 logger.info(`LOADED ROUTE: ${file}`)

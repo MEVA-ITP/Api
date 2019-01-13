@@ -2,7 +2,7 @@ import validator from "validator"
 import phone from "phone"
 import {User} from '../database'
 import {doesLdapUserExist} from "../general/ldap";
-import {getUserPermissionByLdapType} from "../config/userPermissions";
+import {getUserPermissionByLdapType} from "../general/userPermissions";
 
 export const init = (app) => {
     app.post('/register', async (req, res) => {

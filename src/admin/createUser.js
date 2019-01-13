@@ -1,7 +1,7 @@
 import {ArgumentParser} from 'argparse'
 import bcrypt from 'bcryptjs'
 import {database, User} from "../database";
-import {userPermissions} from "../config/userPermissions";
+import {userPermissions} from "../general/userPermissions";
 
 const run = async (args) => {
     if (args.external) {
