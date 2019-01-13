@@ -1,6 +1,7 @@
 import convict from 'convict'
 import fs from "fs";
 import path from "path";
+import {logger} from "./loger";
 
 const envs = ['production', 'development', 'test']
 
@@ -122,4 +123,6 @@ const loadFiles = fs.readdirSync(path.join(__dirname, '../../config'))
     .map(file => '../config/' + file)
 
 config.loadFile(loadFiles)
+logger.info(`Load config files: ${JSON.stringify(loadFiles)}`)
 config.validate({allowed: 'strict'})
+logger.silly(config.toString())
