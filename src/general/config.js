@@ -107,8 +107,8 @@ export const config = convict({
 })
 
 let env = config.get('env')
-let noCurrentEnv = envs.splice(envs.indexOf(env), 1)
-
+const noCurrentEnv = envs.slice()
+noCurrentEnv.splice(envs.indexOf(env), 1)
 
 const loadFiles = fs.readdirSync(path.join(__dirname, '../../config'))
     .sort()
@@ -125,4 +125,4 @@ const loadFiles = fs.readdirSync(path.join(__dirname, '../../config'))
 config.loadFile(loadFiles)
 logger.info(`Load config files: ${JSON.stringify(loadFiles)}`)
 config.validate({allowed: 'strict'})
-logger.silly(config.toString())
+// logger.silly(config.toString())
