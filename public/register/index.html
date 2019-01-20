@@ -6,18 +6,61 @@
 </head>
 <body>
 <h1>Register</h1>
-<form action="/register" method="post">
+<form action="/register" method="post" id="register">
     <div>
-        <label>Email:</label>
-        <input type="email" name="email" />
+        <input type="radio" name="type" value="internal" checked>Internal<br>
+        <input type="radio" name="type" value="external">External<br>
     </div>
-    <div>
-        <label>Phone:</label>
-        <input type="tel" name="phone" value="+43 650 3303596"/>
-    </div>
-    <div>
-        <input type="submit" value="Register"/>
-    </div>
+    <br>
+    <label>Email:</label><input type="email" name="email"/><br>
+    <label>Phone:</label><input type="tel" name="phone"/><br>
+    <label>Firstname:</label><input type="text" name="fname"/><br>
+    <label>Lastname:</label><input type="text" name="lname"/><br>
+    <label>Password:</label><input type="password" name="password"/><br>
+    <input type="submit" value="Register"/>
 </form>
+<script>
+    async function submit(e) {
+        e.preventDefault()
+
+        let form = new FormData(document.getElementById('register'));
+        const neededData = ['type', 'email', 'phone']
+        if(form.get('type') === 'external') {
+            neededData.push('fname', 'lname', 'password')
+        }
+
+        console.log(neededData)
+
+        const send = {}
+        for(let nd of neededData) {
+            if(form.get(nd).trim() === '') {
+                console.error('Data needed: ' + nd)
+                return;
+            }
+            send[nd] = form.get(nd)
+        }
+
+        console.log(send)
+
+        const gotten = await (await fetch('.', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(send)
+        })).json()
+
+        console.log(gotten)
+
+        if (gotten.ok === true) {
+            //window.location.href = "../"
+        } else {
+            //window.location.href = "./"
+        }
+        return false
+    }
+
+    document.getElementById("register").addEventListener('submit', submit)
+</script>
 </body>
 </html>

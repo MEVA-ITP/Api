@@ -1,54 +1,93 @@
-import validator from "validator"
+import {logger} from "../general/loger";
+import validatejs from 'validate.js'
 import phone from "phone"
-import {User} from '../database'
-import {doesLdapUserExist} from "../general/ldap";
-import {getUserPermissionByLdapType} from "../general/userPermissions";
+import bcrypt from 'bcryptjs'
+import {User} from "../database/Models";
+
+validatejs.validators.phone = (value, options) => {
+    const val = phone(value, options)
+    if (val.length === 0) {
+        return "is not a valid phone number."
+    }
+}
+
+/**
+ *
+ * @param value
+ * @param options
+ *      model: Mongoose Model
+ *      message: String Custom error message
+ *      key: String/[String] overrides default key(s)
+ * @param key Key of the
+ * @return {Promise<void>}
+ */
+validatejs.validators.notInDb = async (value, options, key) => {
+    key = [key]
+    if (options.key) {
+        key = Array.isArray(options.key) ? options.key : [options.key]
+    }
+
+    let or = key.map(k => ({[k]: value}))
+    const found = await options.model.findOne({$or: or})
+    if (found) {
+        return options.message ? options.message : "does already exist"
+    }
+}
 
 export const init = (app) => {
     app.post('/register', async (req, res) => {
-        let ret = "<h1>Register</h1>"
+        logger.debug(JSON.stringify(req.body))
 
-        let error = []
-        if (req.body.email && req.body.phone) {
-            let userExists = null
-
-            if (!validator.isEmail(req.body.email)) {
-                error.push("Email is not valid")
-            } else if (!req.body.email.endsWith("tgm.ac.at")) {
-                error.push("Email is not valid tgm email")
-            } else {
-                userExists = await doesLdapUserExist(req.body.email)
-
-                if(!userExists) {
-                    error.push("Email was not found in tgm.")
-                }
+        let constraints = {
+            type: {
+                presence: true,
+                inclusion: ['internal', 'external'],
+            },
+            email: {
+                presence: true,
+                email: true,
+                notInDb: {model: User},
+            },
+            phone: {
+                presence: true,
+                phone: true,
+                notInDb: {model: User},
             }
-
-            if (!(phone(req.body.phone).length > 0)) {
-                error.push("Phone is not valid")
-            } else {
-                req.body.phone = phone(req.body.phone)[0]
-            }
-
-            if (error.length > 0) {
-                res.send("<h1>Error's</h1>" + error.join(", "))
-                return
-            }
-
-            let newUser = new User({
-                email: req.body.email,
-                phone: req.body.phone,
-                permission: getUserPermissionByLdapType(userExists.employeeType),
-                external: 'false',
-                active: true,
-            })
-            await newUser.save()
-
-            res.redirect('/login')
-        } else {
-            res.redirect('/register')
         }
 
-        res.send(ret)
+        if (req.body.type === 'external') {
+            constraints = {
+                ...constraints,
+                fname: {
+                    presence: true,
+                },
+                lname: {
+                    presence: true,
+                },
+                password: {
+                    presence: true,
+                }
+            }
+        }
+
+        try {
+            await validatejs.async(req.body, constraints)
+
+            req.body.active = req.body.type === 'internal'
+            req.body.external = req.body.type !== 'internal'
+
+            if (req.body.type === 'external') {
+                req.body.password = await bcrypt.hash(req.body.password, 10)
+            }
+
+            let user = new User(req.body)
+            await user.save()
+            logger.log('silly', 'created new user ' + user.email)
+
+            res.send(JSON.stringify({ok: true, error: null}))
+        } catch (e) {
+            logger.log('warn', "Register error: " + e)
+            res.send(JSON.stringify({ok: false, error: e}))
+        }
     })
 }
